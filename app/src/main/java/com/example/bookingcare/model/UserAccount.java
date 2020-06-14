@@ -1,14 +1,14 @@
-package com.example.bookingcare.data.model;
+package com.example.bookingcare.model;
 
 /**
  * Data class that captures user information for logged in users retrieved from LoginRepository
  */
-public class LoggedInUser {
+public class UserAccount {
 
     private String userId;
     private String displayName;
 
-    public LoggedInUser(String userId, String displayName) {
+    public UserAccount(String userId, String displayName) {
         this.userId = userId;
         this.displayName = displayName;
     }

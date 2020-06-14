@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:iconTint="@android:color/white"
+            android:title="@string/menu_home" />
+        <item
+            android:id="@+id/nav_department"
+            android:icon="@drawable/ic_department"
+            android:iconTint="@android:color/white"
+            android:title="@string/menu_department" />
+        <item
+            android:id="@+id/nav_blog"
+            android:icon="@drawable/ic_blog"
+            android:iconTint="@android:color/white"
+            android:title="@string/menu_blog" />
+        <item
+            android:id="@+id/nav_pages"
+            android:icon="@drawable/ic_pages"
+            android:iconTint="@android:color/white"
+            android:title="@string/menu_pages" />
+        <item
+            android:id="@+id/nav_doctors"
+            android:icon="@drawable/ic_doctors"
+            android:iconTint="@android:color/white"
+            android:title="@string/menu_doctors" />
+        <item
+            android:id="@+id/nav_contact"
+            android:icon="@drawable/ic_department"
+            android:iconTint="@android:color/white"
+            android:title="@string/menu_contact" />
+    </group>
+</menu>
