@@ -6,13 +6,20 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowTitleStyle">@style/titleStyle</item>
     </style>
-
+    <style name="titleStyle" >
+        <item name="android:textSize">35sp</item>
+        <item name="android:textColor">#E60000</item>
+    </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
@@ -22,5 +29,8 @@
         <item name="android:scaleType">fitXY</item>
         <item name="android:src">@drawable/banner_1</item>
     </style>
-
+    <declare-styleable name="UnderlinedTextView" >
+        <attr name="underlineWidth" format="dimension" />
+        <attr name="underlineColor" format="color" />
+    </declare-styleable>
 </resources>

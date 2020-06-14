@@ -1,28 +1,17 @@
 package com.example.bookingcare.ui.home;
 
 import android.os.Bundle;
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Menu;
 import android.widget.TextView;
 
 import com.example.bookingcare.R;
 import com.example.bookingcare.remote.login.UserInfo;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -42,7 +31,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
         drawerLayout = findViewById(R.id.drawer_layout);
 
@@ -53,8 +42,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         txtFullName = (TextView) headerView.findViewById(R.id.txtFullName);
         txtFullName.setText(UserInfo.getInstance().getFullName());
 
-        TextView welcom = findViewById(R.id.welcome);
-        welcom.setText(Html.fromHtml("<u>Welcome to Docmed</u> "));
     }
 
     @Override
