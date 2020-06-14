@@ -39,9 +39,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        edtEmail = (EditText) findViewById(R.id.email);
-        edtPassword = (EditText) findViewById(R.id.password);
-        btnLogin = (Button) findViewById(R.id.login);
+        edtEmail = findViewById(R.id.email);
+        edtPassword = findViewById(R.id.password);
+        btnLogin = findViewById(R.id.login);
         loadingProgressBar = findViewById(R.id.loading);
         userService = ApiUtils.getUserService();
 

@@ -1,6 +1,9 @@
 package com.example.bookingcare.ui.home;
 
 import android.os.Bundle;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -49,6 +52,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         View headerView = navigationView.getHeaderView(0);
         txtFullName = (TextView) headerView.findViewById(R.id.txtFullName);
         txtFullName.setText(UserInfo.getInstance().getFullName());
+
+        TextView welcom = findViewById(R.id.welcome);
+        welcom.setText(Html.fromHtml("<u>Welcome to Docmed</u> "));
     }
 
     @Override
