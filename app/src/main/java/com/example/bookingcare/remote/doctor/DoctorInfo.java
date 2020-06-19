@@ -1,16 +1,16 @@
-package com.example.bookingcare.remote.login; ;
+package com.example.bookingcare.remote.doctor; ;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class UserInfo {
-    private static UserInfo _instance = new UserInfo();
+public class DoctorInfo {
+    private static DoctorInfo _instance = new DoctorInfo();
 
-    public static void init(UserInfo result){
+    public static void init(DoctorInfo result){
         _instance = result;
     }
 
-    public static UserInfo getInstance(){
+    public static DoctorInfo getInstance(){
        return _instance;
     };
 
@@ -56,7 +56,7 @@ public class UserInfo {
         this.accessToken = accessToken;
     }
 
-    public UserInfo withAccessToken(String accessToken) {
+    public DoctorInfo withAccessToken(String accessToken) {
         this.accessToken = accessToken;
         return this;
     }
@@ -69,7 +69,7 @@ public class UserInfo {
         this.id = id;
     }
 
-    public UserInfo withId(String id) {
+    public DoctorInfo withId(String id) {
         this.id = id;
         return this;
     }
@@ -82,7 +82,7 @@ public class UserInfo {
         this.fistName = fistName;
     }
 
-    public UserInfo withFistName(String fistName) {
+    public DoctorInfo withFistName(String fistName) {
         this.fistName = fistName;
         return this;
     }
@@ -95,7 +95,7 @@ public class UserInfo {
         this.lastName = lastName;
     }
 
-    public UserInfo withLastName(String lastName) {
+    public DoctorInfo withLastName(String lastName) {
         this.lastName = lastName;
         return this;
     }
@@ -112,7 +112,7 @@ public class UserInfo {
         this.description = description;
     }
 
-    public UserInfo withDescription(String description) {
+    public DoctorInfo withDescription(String description) {
         this.description = description;
         return this;
     }
@@ -125,7 +125,7 @@ public class UserInfo {
         this.addressDetail = addressDetail;
     }
 
-    public UserInfo withAddressDetail(String addressDetail) {
+    public DoctorInfo withAddressDetail(String addressDetail) {
         this.addressDetail = addressDetail;
         return this;
     }
@@ -138,7 +138,7 @@ public class UserInfo {
         this.email = email;
     }
 
-    public UserInfo withEmail(String email) {
+    public DoctorInfo withEmail(String email) {
         this.email = email;
         return this;
     }
@@ -151,7 +151,7 @@ public class UserInfo {
         this.password = password;
     }
 
-    public UserInfo withPassword(String password) {
+    public DoctorInfo withPassword(String password) {
         this.password = password;
         return this;
     }
@@ -164,7 +164,7 @@ public class UserInfo {
         this.salt = salt;
     }
 
-    public UserInfo withSalt(String salt) {
+    public DoctorInfo withSalt(String salt) {
         this.salt = salt;
         return this;
     }
@@ -177,7 +177,7 @@ public class UserInfo {
         this.createAt = createAt;
     }
 
-    public UserInfo withCreateAt(String createAt) {
+    public DoctorInfo withCreateAt(String createAt) {
         this.createAt = createAt;
         return this;
     }
@@ -190,7 +190,7 @@ public class UserInfo {
         this.updateAt = updateAt;
     }
 
-    public UserInfo withUpdateAt(String updateAt) {
+    public DoctorInfo withUpdateAt(String updateAt) {
         this.updateAt = updateAt;
         return this;
     }

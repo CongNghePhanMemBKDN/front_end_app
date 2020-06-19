@@ -10,7 +10,10 @@
     tools:openDrawer="start"
     >
 
-    <include android:id="@+id/content_frame" layout="@layout/home_content" />
+    <include
+        layout="@layout/app_bar_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <com.google.android.material.navigation.NavigationView
     android:id="@+id/nav_view"
@@ -21,8 +24,8 @@
     android:background="@color/overlayBackground"
     app:itemTextColor="@android:color/white"
     app:itemIconTint="@android:color/holo_blue_dark"
-    app:headerLayout="@layout/nav_header_home"
-    app:menu="@menu/activity_home_drawer"
+    app:headerLayout="@layout/nav_header_main"
+    app:menu="@menu/activity_main_drawer"
         />
 
 </androidx.drawerlayout.widget.DrawerLayout>

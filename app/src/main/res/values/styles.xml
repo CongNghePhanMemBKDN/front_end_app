@@ -6,12 +6,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowTitleStyle">@style/titleStyle</item>
     </style>
-    <style name="titleStyle" >
-        <item name="android:textSize">35sp</item>
-        <item name="android:textColor">#E60000</item>
-    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -32,5 +28,14 @@
     <declare-styleable name="UnderlinedTextView" >
         <attr name="underlineWidth" format="dimension" />
         <attr name="underlineColor" format="color" />
+        <attr name="underlineSpacing" format="dimension" />
+        <attr name="underlineLength" format="dimension" />
+        <attr name="underlineGravity" format="enum" >
+                <enum name="CENTER" value="0" />
+                <enum name="LEFT" value="1" />
+                <enum name="RIGHT" value="2" />
+        </attr>
     </declare-styleable>
+
+
 </resources>

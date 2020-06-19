@@ -19,10 +19,17 @@ import androidx.appcompat.widget.AppCompatTextView;
 import com.example.bookingcare.R;
 
 public class UnderlinedTextView extends AppCompatTextView {
+    public static final int GRAVITY_CENTER = 0;
+    public static final int GRAVITY_LEFT = 1;
+    public static final int GRAVITY_RIGHT = 2;
+
 
     private Rect mRect;
     private Paint mPaint;
     private float mStrokeWidth;
+    private float mSpacing;
+    private float mLength;
+    private int mGravity;
 
     public UnderlinedTextView(Context context) {
         this(context, null, 0);
@@ -43,7 +50,10 @@ public class UnderlinedTextView extends AppCompatTextView {
 
         TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.UnderlinedTextView, defStyle, 0);
         int underlineColor = typedArray.getColor(R.styleable.UnderlinedTextView_underlineColor, 0xFFFF0000);
-        mStrokeWidth = typedArray.getDimension(R.styleable.UnderlinedTextView_underlineWidth, density * 15);
+        mStrokeWidth = typedArray.getDimension(R.styleable.UnderlinedTextView_underlineWidth, density * 2);
+        mSpacing = typedArray.getDimension(R.styleable.UnderlinedTextView_underlineSpacing, density * 5);
+        mLength = typedArray.getDimension(R.styleable.UnderlinedTextView_underlineLength, density * 20);
+        mGravity = typedArray.getInt(R.styleable.UnderlinedTextView_underlineGravity, GRAVITY_CENTER);
         typedArray.recycle();
 
         mRect = new Rect();
@@ -75,36 +85,42 @@ public class UnderlinedTextView extends AppCompatTextView {
     @Override
     protected void onDraw(Canvas canvas) {
 
-        Path path = new Path();
-        path.moveTo(20, 20);
-        path.lineTo(100,20);
-        path.lineTo(130, 70);
-        path.lineTo(20, 70);
-        path.lineTo(20, 20);
-        Paint paint = new Paint();
-        paint.setColor(Color.RED);
-        paint.setStyle(Paint.Style.FILL);
-        paint.setStrokeWidth(2);
-        PathShape pathShape = new PathShape(path,getWidth() + 15 ,getHeight() + 15);
-
-        ShapeDrawable shapeDrawable = new ShapeDrawable(pathShape);
-        shapeDrawable.getPaint().set(paint);
-        shapeDrawable.setBounds(0, 0, getWidth() + 15, getHeight() + 15);
-        shapeDrawable.draw(canvas);
+//        int count = getLineCount();
 
         final Layout layout = getLayout();
         float x_start, x_stop, x_diff;
         int firstCharInLine, lastCharInLine;
 
+//        for (int i = 0; i < count; i++) {
             int baseline = getLineBounds(0, mRect);
             firstCharInLine = layout.getLineStart(0);
-            lastCharInLine = 5;
+            lastCharInLine = layout.getLineEnd(0);
 
-            x_start = layout.getPrimaryHorizontal(firstCharInLine);
-            x_diff = layout.getPrimaryHorizontal(firstCharInLine + 1) - x_start;
-            x_stop = layout.getPrimaryHorizontal(lastCharInLine - 1) + x_diff;
 
-            canvas.drawLine(x_start, baseline + mStrokeWidth +25 , x_stop, baseline + mStrokeWidth, mPaint);
+        float start = layout.getPrimaryHorizontal(firstCharInLine);
+        float stop = layout.getPrimaryHorizontal(lastCharInLine) ;
+
+            switch (mGravity){
+                case GRAVITY_LEFT:
+                    x_start = layout.getPrimaryHorizontal(firstCharInLine);
+                    x_stop = x_start + mLength;
+                    break;
+                case GRAVITY_RIGHT:
+                    x_stop = stop;
+                    x_start = x_stop - mLength;
+                    break ;
+                case GRAVITY_CENTER:
+                    x_start = (stop - start - mLength) / 2;
+                    x_stop = x_start + mLength;
+                    break;
+                default:
+                    x_start = start;
+                    x_stop = stop;
+            }
+
+
+
+            canvas.drawLine(x_start, baseline + mStrokeWidth + mSpacing , x_stop, baseline + mStrokeWidth + mSpacing, mPaint);
 
 
         super.onDraw(canvas);

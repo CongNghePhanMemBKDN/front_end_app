@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home_user">
+
+    <fragment
+        android:id="@+id/nav_home_user"
+        android:name="com.example.bookingcare.ui.user.HomeUserFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home_user">
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_home_doctor"
+        android:name="com.example.bookingcare.ui.doctor.HomeDoctorFragment"
+        android:label="@string/menu_home"/>
+
+    <fragment
+        android:id="@+id/nav_home_admin"
+        android:name="com.example.bookingcare.ui.admin.HomeAdminFragment"
+        android:label="@string/menu_home"/>
+
+    <fragment
+        android:id="@+id/nav_departments"
+        android:name="com.example.bookingcare.ui.user.DepartmentsFragment"
+        android:label="@string/menu_departments"
+        tools:layout="@layout/fragment_departments" />
+
+    <fragment
+        android:id="@+id/nav_schedule_manage"
+        android:name="com.example.bookingcare.ui.doctor.ScheduleManageFragment"
+        android:label="@string/menu_schedule_manage"
+        tools:layout="@layout/fragment_schedule_manage" />
+
+    <fragment
+        android:id="@+id/nav_contact"
+        android:name="com.example.bookingcare.ui.common.ContactFragment"
+        android:label="@string/menu_contact"
+        tools:layout="@layout/fragment_contact" />
+</navigation>

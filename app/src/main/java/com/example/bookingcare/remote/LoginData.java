@@ -1,5 +1,5 @@
 
-package com.example.bookingcare.remote.login;
+package com.example.bookingcare.remote;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
