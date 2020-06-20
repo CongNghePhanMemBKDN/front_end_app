@@ -1,10 +1,17 @@
 package com.example.bookingcare.remote.doctor; ;
 
+import com.example.bookingcare.remote.schedules.TimeSlot;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class DoctorInfo {
+import java.util.List;
+import java.util.Map;
+
+public class DoctorInfo<Líst> {
     private static DoctorInfo _instance = new DoctorInfo();
+
+    public DoctorInfo() {
+    }
 
     public static void init(DoctorInfo result){
         _instance = result;
@@ -47,6 +54,8 @@ public class DoctorInfo {
     @SerializedName("updateAt")
     @Expose
     private String updateAt;
+
+    private Map<String, List<TimeSlot>> schedule;
 
     public String getAccessToken() {
         return accessToken;
