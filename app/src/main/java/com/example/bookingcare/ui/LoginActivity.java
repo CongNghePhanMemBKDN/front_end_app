@@ -14,10 +14,16 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.bookingcare.Common;
 import com.example.bookingcare.R;
 import com.example.bookingcare.remote.ApiUtils;
-import com.example.bookingcare.remote.doctor.DoctorService;
+import com.example.bookingcare.remote.Common.CommonService;
+import com.example.bookingcare.remote.doctor.DoctorController;
 import com.example.bookingcare.remote.doctor.DoctorInfo;
+import com.example.bookingcare.remote.user.DoctorDetail;
+import com.example.bookingcare.remote.user.UserController;
+import com.example.bookingcare.remote.user.UserInfo;
+import com.example.bookingcare.remote.user.UserService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONException;
@@ -30,7 +36,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
-
     EditText edtEmail;
     EditText edtPassword;
     ProgressBar loadingProgressBar;
@@ -53,8 +58,8 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        Button btnLoginAsUser = findViewById(R.id.login_as_user);
-        btnLoginAsUser.setOnClickListener(new View.OnClickListener() {
+        Button btnLogin = findViewById(R.id.login_button);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String username = edtEmail.getText().toString();
@@ -62,36 +67,44 @@ public class LoginActivity extends AppCompatActivity {
                 //validate form
                 if(validateLogin(username, password)){
                     //do login
-                    doLoginAsUser(username, password);
+                    doLogin(username, password);
                 }
             }
         });
-        Button btnLoginAsDoctor = findViewById(R.id.login_as_doctor);
-        btnLoginAsDoctor.setOnClickListener(new View.OnClickListener() {
+        Button btnRegister = findViewById(R.id.register_button);
+        btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = edtEmail.getText().toString();
-                String password = edtPassword.getText().toString();
-                //validate form
-                if(validateLogin(username, password)){
-                    //do login
-                    doLoginAsDoctor(username, password);
-                }
+                doRegister();
             }
         });
-        Button btnLoginAsAdmin = findViewById(R.id.login_as_admin);
-        btnLoginAsAdmin.setOnClickListener(new View.OnClickListener() {
+
+        Button btnSwitchRole = findViewById(R.id.switch_role_button);
+        btnSwitchRole.setText(getString(Common.isUser()?R.string.action_switch_role_doctor:R.string.action_switch_role_user));
+        btnSwitchRole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = edtEmail.getText().toString();
-                String password = edtPassword.getText().toString();
-                //validate form
-                if(validateLogin(username, password)){
-                    //do login
-                    doLoginAsAdmin(username, password);
-                }
+                doSwitchRole();
             }
         });
+    }
+
+    private void doSwitchRole() {
+        Button btnSwitchRole = findViewById(R.id.switch_role_button);
+        String msg;
+        if (Common.isUser()){
+            Common.ROLE = Common.ROLE_DOCTOR;
+            Common.CONTROLLER = DoctorController.getInstance();
+            btnSwitchRole.setText(getString(R.string.action_switch_role_user));
+            msg = "Switch to doctor completed";
+        } else {
+            Common.ROLE = Common.ROLE_USER;
+            Common.CONTROLLER = UserController.getInstance();
+            btnSwitchRole.setText(getString(R.string.action_switch_role_doctor));
+            msg = "Switch to patient completed";
+
+        }
+        Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
     }
 
     private void changeBaseUrl(){
@@ -131,20 +144,26 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
-    private void doLoginAsUser(final String email, final String password){
+    private void doLogin(final String email, final String password){
         try {
-
             JSONObject body = new JSONObject();
             body.put("email", email);
             body.put("password", password);
-            Call call = ApiUtils.getInstance().getUserService().login(body.toString());
+            showWaitingCircle();
+            Call call = Common.CONTROLLER.login(body.toString());
             call.enqueue(new Callback() {
                 @Override
                 public void onResponse(Call call, Response response) {
+                    hideWaitingCircle();
                     if (response.isSuccessful()) {
-                        ApiUtils.getInstance().setRole(ApiUtils.USER);
-                        DoctorInfo.init((DoctorInfo) response.body());
+                        if(Common.isUser()) {
+                            UserController.getInstance().setInfo((UserInfo) response.body());
+                        } else if(Common.isDoctor()) {
+                            DoctorController.getInstance().setInfo((DoctorInfo) response.body());
+
+                        }
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra(Common.ROLE_NAME, Common.ROLE);
                         startActivity(intent);
 
                     } else {
@@ -162,88 +181,25 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call call, Throwable t) {
+                    hideWaitingCircle();
                     Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e){
+            hideWaitingCircle();
             Toast.makeText(LoginActivity.this, "Login exception!", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void doLoginAsDoctor(final String email, final String password){
-        try {
+    private void doRegister(){
 
-            JSONObject body = new JSONObject();
-            body.put("email", email);
-            body.put("password", password);
-            Call call = ApiUtils.getInstance().getDoctorService().login(body.toString());
-            call.enqueue(new Callback() {
-                @Override
-                public void onResponse(Call call, Response response) {
-                    if (response.isSuccessful()) {
-                        ApiUtils.getInstance().setRole(ApiUtils.DOCTOR);
-                        DoctorInfo.init((DoctorInfo) response.body());
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
-
-                    } else {
-                        try {
-                            JSONObject jObjError = new JSONObject(response.errorBody().string());
-                            Toast.makeText(LoginActivity.this, jObjError.getString("message"), Toast.LENGTH_SHORT).show();
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call call, Throwable t) {
-                    Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        } catch (Exception e){
-            Toast.makeText(LoginActivity.this, "Login exception!", Toast.LENGTH_SHORT).show();
-        }
     }
 
-    private void doLoginAsAdmin(final String email,final String password){
-        try {
-            JSONObject body = new JSONObject();
-            body.put("email", email);
-            body.put("password", password);
-            Call call = ApiUtils.getInstance().getAdminService().login(body.toString());
-            call.enqueue(new Callback() {
-                @Override
-                public void onResponse(Call call, Response response) {
-                    if (response.isSuccessful()) {
-                        ApiUtils.getInstance().setRole(ApiUtils.ADMIN);
-                        DoctorInfo.init((DoctorInfo) response.body());
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
+    public void showWaitingCircle(){
+        findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+    }
 
-                    } else {
-                        try {
-                            JSONObject jObjError = new JSONObject(response.errorBody().string());
-                            Toast.makeText(LoginActivity.this, jObjError.getString("message"), Toast.LENGTH_SHORT).show();
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call call, Throwable t) {
-                    Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        } catch (Exception e){
-            Toast.makeText(LoginActivity.this, "Login exception!", Toast.LENGTH_SHORT).show();
-        }
+    public void hideWaitingCircle(){
+        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }
 }

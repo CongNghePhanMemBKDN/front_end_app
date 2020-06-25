@@ -16,10 +16,10 @@
             android:iconTint="@android:color/white"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_home_admin"
-            android:icon="@drawable/ic_home"
+            android:id="@+id/nav_account"
+            android:icon="@drawable/ic_account"
             android:iconTint="@android:color/white"
-            android:title="@string/menu_home" />
+            android:title="@string/menu_account" />
         <item
             android:id="@+id/nav_departments"
             android:icon="@drawable/ic_department"
@@ -31,16 +31,6 @@
             android:iconTint="@android:color/white"
             android:title="@string/menu_schedule" />
         <item
-            android:id="@+id/nav_blog"
-            android:icon="@drawable/ic_blog"
-            android:iconTint="@android:color/white"
-            android:title="@string/menu_blog" />
-        <item
-            android:id="@+id/nav_pages"
-            android:icon="@drawable/ic_pages"
-            android:iconTint="@android:color/white"
-            android:title="@string/menu_pages" />
-        <item
             android:id="@+id/nav_doctors"
             android:icon="@drawable/ic_doctors"
             android:iconTint="@android:color/white"
@@ -50,5 +40,10 @@
             android:icon="@drawable/ic_department"
             android:iconTint="@android:color/white"
             android:title="@string/menu_contact" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_logout"
+            android:iconTint="@android:color/white"
+            android:title="@string/menu_logout"/>
     </group>
 </menu>

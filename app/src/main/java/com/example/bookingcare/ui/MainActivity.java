@@ -1,14 +1,19 @@
 package com.example.bookingcare.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.bookingcare.Common;
 import com.example.bookingcare.R;
-import com.example.bookingcare.remote.ApiUtils;
-import com.example.bookingcare.remote.doctor.DoctorInfo;
+import com.example.bookingcare.remote.doctor.DoctorController;
+import com.example.bookingcare.remote.user.UserController;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textfield.TextInputEditText;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -25,7 +30,9 @@ import androidx.navigation.ui.NavigationUI;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private DrawerLayout drawerLayout;
+    NavController navController;
     TextView txtFullName;
+    BottomSheetDialog bottomDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,45 +48,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout = findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = findViewById(R.id.nav_view);
+
+
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.mobile_navigation);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.mobile_navigation);
-
         AppBarConfiguration mAppBarConfiguration = null;
-        if (ApiUtils.getInstance().isUser()) {
-            navGraph.setStartDestination(R.id.nav_home_user);
-            mAppBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.nav_home_user, R.id.nav_departments, R.id.nav_contact)
-                    .setDrawerLayout(drawerLayout)
-                    .build();
-            navigationView.getMenu().findItem(R.id.nav_home_doctor).setVisible(false);
-            navigationView.getMenu().findItem(R.id.nav_home_admin).setVisible(false);
-        } else if (ApiUtils.getInstance().isDoctor()) {
-            navGraph.setStartDestination(R.id.nav_home_doctor);
-            mAppBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.nav_home_doctor, R.id.nav_schedule_manage, R.id.nav_contact)
-                    .setDrawerLayout(drawerLayout)
-                    .build();
-            navigationView.getMenu().findItem(R.id.nav_home_admin).setVisible(false);
-            navigationView.getMenu().findItem(R.id.nav_home_user).setVisible(false);
-            navigationView.getMenu().findItem(R.id.nav_doctors).setVisible(false);
-            navigationView.getMenu().findItem(R.id.nav_departments).setVisible(false);
 
-        } else if (ApiUtils.getInstance().isAdmin()) {
-            navGraph.setStartDestination(R.id.nav_home_admin);
-            mAppBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.nav_home_admin, R.id.nav_departments, R.id.nav_contact)
-                    .setDrawerLayout(drawerLayout)
-                    .build();
-            navigationView.getMenu().findItem(R.id.nav_home_user).setVisible(false);
-            navigationView.getMenu().findItem(R.id.nav_home_doctor).setVisible(false);
-            navigationView.getMenu().findItem(R.id.nav_doctors).setVisible(false);
-            navigationView.getMenu().findItem(R.id.nav_departments).setVisible(false);
-            navigationView.getMenu().findItem(R.id.nav_pages).setVisible(false);
-            navigationView.getMenu().findItem(R.id.nav_blog).setVisible(false);
-            navigationView.getMenu().findItem(R.id.nav_contact).setVisible(false);
+        View headerView = navigationView.getHeaderView(0);
+        txtFullName = headerView.findViewById(R.id.txtFullName);
+        txtFullName.setText(Common.CONTROLLER.getInfo().getFullName());
+
+        int role = getIntent().getIntExtra(Common.ROLE_NAME, Common.ROLE_USER);
+
+        switch (role){
+            case Common.ROLE_USER:
+                navGraph.setStartDestination(R.id.nav_home_user);
+                mAppBarConfiguration = new AppBarConfiguration.Builder(
+                        R.id.nav_home_user, R.id.nav_account, R.id.nav_departments, R.id.nav_doctors, R.id.nav_contact, R.id.nav_logout)
+                        .setDrawerLayout(drawerLayout)
+                        .build();
+                navigationView.getMenu().findItem(R.id.nav_home_doctor).setVisible(false);
+                navigationView.getMenu().findItem(R.id.nav_schedule_manage).setVisible(false);
+
+                break;
+            case Common.ROLE_DOCTOR:
+                navGraph.setStartDestination(R.id.nav_home_doctor);
+                mAppBarConfiguration = new AppBarConfiguration.Builder(
+                        R.id.nav_home_doctor, R.id.nav_account, R.id.nav_schedule_manage, R.id.nav_contact, R.id.nav_logout)
+                        .setDrawerLayout(drawerLayout)
+                        .build();
+                navigationView.getMenu().findItem(R.id.nav_home_user).setVisible(false);
+                navigationView.getMenu().findItem(R.id.nav_doctors).setVisible(false);
+                navigationView.getMenu().findItem(R.id.nav_departments).setVisible(false);
+                break;
         }
         if (mAppBarConfiguration == null){
             throw new IllegalArgumentException();
@@ -88,11 +91,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_logout:
+                        doLogout();
+                        return true;
+                    case R.id.nav_account:
+                        drawerLayout.closeDrawer(GravityCompat.START);
+                        showUpdateDialog();
+                        return true;
+                }
+                //This is for maintaining the behavior of the Navigation view
+                NavigationUI.onNavDestinationSelected(menuItem, navController);
+                //This is for closing the drawer after acting on it
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
+        bottomDialog = new BottomSheetDialog(this);
+        bottomDialog.setTitle("Update information");
 
-        View headerView = navigationView.getHeaderView(0);
-        txtFullName =headerView.findViewById(R.id.txtFullName);
-        txtFullName.setText(DoctorInfo.getInstance().getFullName());
+    }
 
+    private void showUpdateDialog(){
+        View sheetView = getLayoutInflater().inflate(R.layout.fragment_account, null);
+        Button btnUpdate = sheetView.findViewById(R.id.update_button);
+        TextInputEditText name = sheetView.findViewById(R.id.edt_name);
+        TextInputEditText password = sheetView.findViewById(R.id.edt_password);
+        bottomDialog.setContentView(sheetView);
+        bottomDialog.show();
+
+    }
+
+    private void doLogout() {
+        UserController.getInstance().setInfo(null);
+        DoctorController.getInstance().setInfo(null);
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -118,7 +155,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         item.setChecked(true);
+
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    public void showWaitingCircle(){
+        findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+    }
+
+    public void hideWaitingCircle(){
+        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }
 }

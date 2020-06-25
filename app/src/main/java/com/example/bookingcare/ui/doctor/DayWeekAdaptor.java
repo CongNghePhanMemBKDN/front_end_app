@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -17,20 +16,20 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bookingcare.R;
-import com.example.bookingcare.remote.schedules.TimeSlot;
+import com.example.bookingcare.remote.schedules.Calendar;
 
+import java.time.DayOfWeek;
 import java.util.List;
+import java.util.Map;
 
 public class DayWeekAdaptor extends RecyclerView.Adapter<DayWeekAdaptor.DayWeekViewHolder> {
 
-    private List<String> mDayWeeks;
-    private List<TimeSlot> mListTimeSlot;
+    private Map<String, List<Calendar>> mListCalendar;
     Context context;
 
-    public DayWeekAdaptor(Context context, List<String> dayWeeks, List<TimeSlot> listTimeSlot) {
+    public DayWeekAdaptor(Context context, Map<String, List<Calendar>> listCalendar) {
         this.context = context;
-        this.mDayWeeks = dayWeeks;
-        this.mListTimeSlot = listTimeSlot;
+        this.mListCalendar = listCalendar;
     }
 
     @NonNull
@@ -43,10 +42,10 @@ public class DayWeekAdaptor extends RecyclerView.Adapter<DayWeekAdaptor.DayWeekV
 
     @Override
     public void onBindViewHolder(final @NonNull DayWeekViewHolder holder, int position) {
-        holder.dayWeekName.setText(mDayWeeks.get(position));
+        String day = DayOfWeek.values()[position].toString();
+        holder.dayWeekName.setText(day);
 
-        TimeSlotAdapter itemInnerRecyclerView = new TimeSlotAdapter(mListTimeSlot);
-
+        TimeSlotAdapter itemInnerRecyclerView = new TimeSlotAdapter(context, mListCalendar.get(day), day);
 
         holder.innerRecyclerView.setLayoutManager(new GridLayoutManager(context, 3));
 
@@ -87,7 +86,7 @@ public class DayWeekAdaptor extends RecyclerView.Adapter<DayWeekAdaptor.DayWeekV
 
     @Override
     public int getItemCount() {
-        return mDayWeeks.size();
+        return mListCalendar.size();
     }
 
     public class DayWeekViewHolder extends RecyclerView.ViewHolder {
