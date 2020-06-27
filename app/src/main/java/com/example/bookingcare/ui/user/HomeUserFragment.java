@@ -8,20 +8,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.bookingcare.Common;
 import com.example.bookingcare.R;
-import com.example.bookingcare.remote.doctor.DoctorController;
-import com.example.bookingcare.remote.doctor.Expertise;
 import com.example.bookingcare.remote.user.UserController;
 import com.example.bookingcare.remote.user.UserInfo;
 
 import java.util.Calendar;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -104,7 +100,16 @@ public class HomeUserFragment extends Fragment {
             @Override
             public void onResponse(Call call, Response response) {
                 if (response.isSuccessful()) {
-                    Common.CONTROLLER.setInfo((UserInfo) response.body());
+                    UserInfo info = (UserInfo) response.body();
+                    UserInfo myInfo = UserController.getInstance().getInfo();
+                    myInfo.setFistName(info.getFistName());
+                    myInfo.setLastName(info.getLastName());
+                    myInfo.setAddress(info.getAddress());
+                    myInfo.setBirthday(info.getBirthday());
+                    myInfo.setAppointment(info.getAppointment());
+                    myInfo.setGender(info.getGender());
+                    myInfo.setCreateAt(info.getCreateAt());
+                    myInfo.setUpdateAt(info.getUpdateAt());
                 }
             }
 

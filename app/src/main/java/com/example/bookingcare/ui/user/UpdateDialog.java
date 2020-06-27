@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 
 import com.example.bookingcare.Common;
 import com.example.bookingcare.R;
-import com.example.bookingcare.remote.Common.CommonInfo;
 import com.example.bookingcare.remote.user.UserController;
 import com.example.bookingcare.remote.user.UserInfo;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -100,7 +99,7 @@ public class UpdateDialog extends BottomSheetDialog {
             firstName.setText(info.getFistName());
             lastName.setText(info.getLastName());
             address.setText(info.getAddress());
-            birthday = info.getBirthday();
+            birthday = info.getBirthdayCalendar();
 
             int year = birthday.get(Calendar.YEAR);
             int month = birthday.get(Calendar.MONTH);
@@ -177,7 +176,17 @@ public class UpdateDialog extends BottomSheetDialog {
                 public void onResponse(Call call, Response response) {
                     hideCircleWaiting.run();
                     if (response.isSuccessful()){
-                        Common.CONTROLLER.setInfo((UserInfo) response.body());
+                        UserInfo info = (UserInfo) response.body();
+                        UserInfo myInfo = UserController.getInstance().getInfo();
+                        myInfo.setFistName(info.getFistName());
+                        myInfo.setLastName(info.getLastName());
+                        myInfo.setAddress(info.getAddress());
+                        myInfo.setBirthday(info.getBirthday());
+                        myInfo.setAppointment(info.getAppointment());
+                        myInfo.setGender(info.getGender());
+                        myInfo.setCreateAt(info.getCreateAt());
+                        myInfo.setUpdateAt(info.getUpdateAt());
+
                         Toast.makeText(getContext(), "Update info completed!", Toast.LENGTH_SHORT).show();
 
                     } else {

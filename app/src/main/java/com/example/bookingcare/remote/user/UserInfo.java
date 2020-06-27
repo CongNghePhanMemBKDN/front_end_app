@@ -40,7 +40,11 @@ public class UserInfo extends CommonInfo {
         this.gender = gender;
     }
 
-    public java.util.Calendar getBirthday() {
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public java.util.Calendar getBirthdayCalendar() {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         java.util.Calendar birthday = java.util.Calendar.getInstance();
         try {
