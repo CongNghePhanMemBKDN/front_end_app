@@ -44,7 +44,6 @@ public class ListDoctorFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_list_doctor, container, false);
-        getExpertise();
         getListDoctor();
         return root;
     }
@@ -87,31 +86,6 @@ public class ListDoctorFragment extends Fragment {
         mDoctorRcv = root.findViewById(R.id.doctor_rcv);
         mDoctorRcv.setAdapter(adaptor);
         mDoctorRcv.setLayoutManager(new LinearLayoutManager(getContext()));
-    }
-
-    private void getExpertise() {
-        Call call = DoctorController.getInstance().getService().getExpertise();
-        call.enqueue(new Callback() {
-            @Override
-            public void onResponse(Call call, Response response) {
-                if (response.isSuccessful()){
-                    mListExpertise = new ArrayList<>();
-                    List<Map> body = (List) ((List) response.body()).get(0);
-                    for (int i = 0; i < body.size(); i++) {
-                        Expertise expertise = new Expertise();
-                        expertise.setId((String) body.get(i).get("id"));
-                        expertise.setName((String) body.get(i).get("name"));
-                        mListExpertise.add(expertise);
-
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-
-            }
-        });
     }
 
     public void showWaitingCircle(){

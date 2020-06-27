@@ -3,6 +3,7 @@ package com.example.bookingcare.remote.schedules;
 import androidx.annotation.Nullable;
 
 import com.example.bookingcare.remote.user.UserInfo;
+import com.example.bookingcare.ui.common.DayWeeks;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -24,6 +25,8 @@ public class Calendar {
     @SerializedName("bookingBy")
     @Expose
     private UserInfo bookingBy;
+
+    private DayWeeks day;
 
     public String getCalenderId() {
         return calenderId;
@@ -65,6 +68,14 @@ public class Calendar {
         this.bookingBy = bookingBy;
     }
 
+    public DayWeeks getDay() {
+        return day;
+    }
+
+    public void setDay(DayWeeks day) {
+        this.day = day;
+    }
+
     @Override
     public boolean equals(@Nullable Object object) {
         try{
@@ -74,4 +85,5 @@ public class Calendar {
         }
         return false;
     }
+
 }

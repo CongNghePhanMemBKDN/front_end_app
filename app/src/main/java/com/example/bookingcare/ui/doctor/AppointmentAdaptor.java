@@ -1,36 +1,31 @@
-package com.example.bookingcare.ui.user;
+package com.example.bookingcare.ui.doctor;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bookingcare.Common;
 import com.example.bookingcare.R;
-import com.example.bookingcare.remote.doctor.DoctorInfo;
 import com.example.bookingcare.remote.user.Appointment;
 import com.example.bookingcare.ui.common.DayWeeks;
-import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
 public class AppointmentAdaptor extends RecyclerView.Adapter<AppointmentAdaptor.AppointmentViewHolder> {
-    List<Appointment> mAppointment;
+    List<com.example.bookingcare.remote.schedules.Calendar> mAppointments;
     Context context;
 
-    public AppointmentAdaptor(Context context, List<Appointment> mAppointment) {
+    public AppointmentAdaptor(Context context, List<com.example.bookingcare.remote.schedules.Calendar> mAppointments) {
         this.context = context;
-        this.mAppointment = mAppointment;
+        this.mAppointments = mAppointments;
     }
 
     @NonNull
@@ -43,28 +38,27 @@ public class AppointmentAdaptor extends RecyclerView.Adapter<AppointmentAdaptor.
 
     @Override
     public void onBindViewHolder(@NonNull AppointmentViewHolder holder, final int position) {
-        holder.agent.setText("Doctor:");
-        Appointment appointment = mAppointment.get(position);
+        holder.agent.setText("Booked by:");
+        com.example.bookingcare.remote.schedules.Calendar appointment = mAppointments.get(position);
 
-        String day = (String) appointment.getCalender().get("day");
-        DayWeeks dayWeeks = DayWeeks.valueOf(day);
+        DayWeeks dayWeeks = appointment.getDay();
         Calendar calendar = Calendar.getInstance();
         while(calendar.get(Calendar.DAY_OF_WEEK) - 1 != dayWeeks.getId()){
             calendar.add(Calendar.DAY_OF_WEEK, 1);
         }
-        holder.day.setText((day +" - " + calendar.get(Calendar.DAY_OF_MONTH) +"/"+calendar.get(Calendar.MONTH)));
-        holder.timeSlot.setText((String)(((Map)appointment.getCalender().get("timeslot")).get("name")));
-        holder.name.setText(appointment.getDoctor().getFullName());
-        holder.email.setText(appointment.getDoctor().getEmail());
+        holder.day.setText((dayWeeks.toString() +" - " + calendar.get(Calendar.DAY_OF_MONTH) +"/"+calendar.get(Calendar.MONTH)));
+        holder.timeSlot.setText(appointment.getTimeSlot());
+        holder.name.setText(appointment.getBookingBy().getFullName());
+        holder.email.setText(appointment.getBookingBy().getEmail());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            holder.avatar.setBackground(context.getDrawable(R.drawable.avatar_doctor));
+            holder.avatar.setBackground(context.getDrawable(R.drawable.avatar_patient));
         }
     }
 
 
     @Override
     public int getItemCount() {
-        return mAppointment.size();
+        return mAppointments.size();
     }
 
 

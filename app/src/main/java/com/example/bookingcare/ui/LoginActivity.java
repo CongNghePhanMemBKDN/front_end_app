@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bookingcare.Common;
@@ -23,6 +24,7 @@ import com.example.bookingcare.remote.doctor.DoctorInfo;
 import com.example.bookingcare.remote.user.UserController;
 import com.example.bookingcare.remote.user.UserInfo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,9 +36,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
-    EditText edtEmail;
-    EditText edtPassword;
-    ProgressBar loadingProgressBar;
+    TextInputEditText edtEmail;
+    TextInputEditText edtPassword;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,10 +46,9 @@ public class LoginActivity extends AppCompatActivity {
 
         edtEmail = findViewById(R.id.email);
         edtPassword = findViewById(R.id.password);
-        loadingProgressBar = findViewById(R.id.loading);
 
         String email = getIntent().getStringExtra(Common.EMAIL);
-        if (email != null && email.trim().length() > 0){
+        if (email != null && email.trim().length() > 0) {
             edtEmail.setText(email);
             edtPassword.setText("");
         }
@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                 String username = edtEmail.getText().toString();
                 String password = edtPassword.getText().toString();
                 //validate form
-                if(validateLogin(username, password)){
+                if (validateLogin(username, password)) {
                     //do login
                     doLogin(username, password);
                 }
@@ -85,7 +85,11 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         Button btnSwitchRole = findViewById(R.id.btn_switch_role);
-        btnSwitchRole.setText(getString(Common.isUser()?R.string.action_switch_role_doctor:R.string.action_switch_role_user));
+        TextView role = findViewById(R.id.role);
+        role.setText(Common.isUser() ? "Patient Login": "Doctor Login");
+
+        btnSwitchRole.setText(getString(Common.isUser() ? R.string.action_switch_role_doctor : R.string.action_switch_role_user));
+
         btnSwitchRole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,23 +100,26 @@ public class LoginActivity extends AppCompatActivity {
 
     private void doSwitchRole() {
         Button btnSwitchRole = findViewById(R.id.btn_switch_role);
+        TextView role = findViewById(R.id.role);
         String msg;
-        if (Common.isUser()){
+        if (Common.isUser()) {
             Common.ROLE = Common.ROLE_DOCTOR;
             Common.CONTROLLER = DoctorController.getInstance();
             btnSwitchRole.setText(getString(R.string.action_switch_role_user));
+            role.setText("Doctor Login");
             msg = "Switch to doctor completed";
         } else {
             Common.ROLE = Common.ROLE_USER;
             Common.CONTROLLER = UserController.getInstance();
             btnSwitchRole.setText(getString(R.string.action_switch_role_doctor));
+            role.setText("Patient Login");
             msg = "Switch to patient completed";
 
         }
         Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
     }
 
-    private void changeBaseUrl(){
+    private void changeBaseUrl() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Change base url");
 
@@ -137,76 +144,76 @@ public class LoginActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private boolean validateLogin(String email, String password){
-        if(email == null || email.trim().length() == 0){
+    private boolean validateLogin(String email, String password) {
+        if (email == null || email.trim().length() == 0) {
             Toast.makeText(this, "Email is required", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if(password == null || password.trim().length() == 0){
+        if (password == null || password.trim().length() == 0) {
             Toast.makeText(this, "Password is required", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
     }
 
-    private void doLogin(final String email, final String password){
+    private void doLogin(final String email, final String password) {
         JSONObject body = new JSONObject();
 
         try {
             body.put("email", email);
             body.put("password", password);
-        } catch (Exception e){
+        } catch (Exception e) {
             hideWaitingCircle();
             Toast.makeText(LoginActivity.this, "Login exception!", Toast.LENGTH_SHORT).show();
         }
-            showWaitingCircle();
-            Call call = Common.CONTROLLER.login(body.toString());
-            call.enqueue(new Callback() {
-                @Override
-                public void onResponse(Call call, Response response) {
-                    hideWaitingCircle();
-                    if (response.isSuccessful()) {
-                        if(Common.isUser()) {
-                            UserController.getInstance().setInfo((UserInfo) response.body());
-                        } else if(Common.isDoctor()) {
-                            DoctorController.getInstance().setInfo((DoctorInfo) response.body());
-                        }
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra(Common.ROLE_NAME, Common.ROLE);
-                        startActivity(intent);
+        showWaitingCircle();
+        Call call = Common.CONTROLLER.login(body.toString());
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                hideWaitingCircle();
+                if (response.isSuccessful()) {
+                    if (Common.isUser()) {
+                        UserController.getInstance().setInfo((UserInfo) response.body());
+                    } else if (Common.isDoctor()) {
+                        DoctorController.getInstance().setInfo((DoctorInfo) response.body());
+                    }
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra(Common.ROLE_NAME, Common.ROLE);
+                    startActivity(intent);
 
-                    } else {
-                        try {
-                            JSONObject jObjError = new JSONObject(response.errorBody().string());
-                            Toast.makeText(LoginActivity.this, jObjError.getString("message"), Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        Toast.makeText(LoginActivity.this, jObjError.getString("message"), Toast.LENGTH_SHORT).show();
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
+            }
 
-                @Override
-                public void onFailure(Call call, Throwable t) {
-                    hideWaitingCircle();
-                    Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                hideWaitingCircle();
+                Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
-    private void doRegister(){
+    private void doRegister() {
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
     }
 
-    public void showWaitingCircle(){
+    public void showWaitingCircle() {
         findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
     }
 
-    public void hideWaitingCircle(){
+    public void hideWaitingCircle() {
         findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }
 }

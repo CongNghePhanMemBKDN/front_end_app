@@ -1,5 +1,6 @@
 package com.example.bookingcare.remote.user;
 
+import com.example.bookingcare.remote.doctor.Expertise;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -25,6 +26,10 @@ public class DoctorDetail {
     @SerializedName("email")
     @Expose
     private String email;
+    @SerializedName("expertise")
+    @Expose
+    private Expertise expertise;
+
 
     public String getId() {
         return id;
@@ -80,6 +85,14 @@ public class DoctorDetail {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Expertise getExpertise() {
+        return expertise;
+    }
+
+    public void setExpertise(Expertise expertise) {
+        this.expertise = expertise;
     }
 
     public String getFullName() {

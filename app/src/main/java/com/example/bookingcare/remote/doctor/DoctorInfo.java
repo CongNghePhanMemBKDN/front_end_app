@@ -16,6 +16,9 @@ public class DoctorInfo extends CommonInfo {
     @SerializedName("description")
     @Expose
     private String description;
+    @SerializedName("expertise")
+    @Expose
+    private Expertise expertise;
 
     private Map<String, List<Calendar>> schedule;
 
@@ -46,6 +49,12 @@ public class DoctorInfo extends CommonInfo {
         return this;
     }
 
+    public Expertise getExpertise() {
+        return expertise;
+    }
 
+    public void setExpertise(Expertise expertise) {
+        this.expertise = expertise;
+    }
 }
 

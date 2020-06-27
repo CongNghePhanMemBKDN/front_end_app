@@ -57,7 +57,6 @@ public class DoctorDetailActivity extends AppCompatActivity {
     List<DayWeeks> mListDays;
     TextView mScheduleMessage;
     String scheduleId;
-    List<Expertise> mListExpertise;
 
     Map<String, List<Calendar>> schedule;
 
@@ -92,8 +91,6 @@ public class DoctorDetailActivity extends AppCompatActivity {
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
 
-        getExpertise();
-
         name = findViewById(R.id.doctor_detail_name);
         getDetailInfo();
 
@@ -103,31 +100,6 @@ public class DoctorDetailActivity extends AppCompatActivity {
         getSchedule();
 
 
-    }
-
-    private void getExpertise() {
-        Call call = DoctorController.getInstance().getService().getExpertise();
-        call.enqueue(new Callback() {
-            @Override
-            public void onResponse(Call call, Response response) {
-                if (response.isSuccessful()){
-                    mListExpertise = new ArrayList<>();
-                    List<Map> body = (List) ((List) response.body()).get(0);
-                    for (int i = 0; i < body.size(); i++) {
-                        Expertise expertise = new Expertise();
-                        expertise.setId((String) body.get(i).get("id"));
-                        expertise.setName((String) body.get(i).get("name"));
-                        mListExpertise.add(expertise);
-
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-
-            }
-        });
     }
 
     private void bookSchedule() {
@@ -213,6 +185,9 @@ public class DoctorDetailActivity extends AppCompatActivity {
         setTitle(detail.getFullName());
 
         name.setText(detail.getFullName());
+
+        TextView expertise = findViewById(R.id.doctor_detail_expertise);
+        expertise.setText(detail.getExpertise().getName());
 
         TextView address = findViewById(R.id.doctor_detail_clinic_address);
         address.setText(detail.getAddressDetail());

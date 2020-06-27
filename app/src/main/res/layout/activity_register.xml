@@ -42,15 +42,20 @@
                 android:id="@+id/layout_doctor_register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
                 android:orientation="vertical"
+                android:padding="10dp"
                 android:visibility="gone">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="Please contact admin to create doctor's account!" />
+                    android:text="Please contact admin to create doctor's account!"
+                    android:textSize="25sp" />
+                <fragment
+                    android:id="@+id/fragment_contact"
+                    android:name="com.example.bookingcare.ui.common.ContactFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <LinearLayout
