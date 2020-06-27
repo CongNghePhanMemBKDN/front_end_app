@@ -4,6 +4,8 @@ package com.example.bookingcare.remote.doctor;
 import com.example.bookingcare.remote.Common.CommonService;
 import com.example.bookingcare.remote.schedules.Calendar;
 
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.Map;
 
@@ -31,5 +33,9 @@ public interface DoctorService {
     @Headers({"accept: */*", "Content-Type: application/json" })
     @PUT("/schedule/update/{doctorId}/{calenderIds}")
     Call<Object> updateSchedule(@Header("x-access-token") String accessToken, @Body String body);
+
+    @Headers({"accept: */*", "Content-Type: application/json" })
+    @POST("/expertise")
+    Call<List> getExpertise();
 
 }

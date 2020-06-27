@@ -8,20 +8,30 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.bookingcare.Common;
 import com.example.bookingcare.R;
+import com.example.bookingcare.remote.doctor.DoctorController;
+import com.example.bookingcare.remote.doctor.Expertise;
+import com.example.bookingcare.remote.user.UserController;
+import com.example.bookingcare.remote.user.UserInfo;
 
 import java.util.Calendar;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeUserFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home_user, container, false);
-
 
         Button btnCheckOurServices = root.findViewById(R.id.btn_check_our_services);
         btnCheckOurServices.setTransformationMethod(null);
@@ -82,7 +92,26 @@ public class HomeUserFragment extends Fragment {
         String year = String.valueOf(Calendar.getInstance().get( Calendar.YEAR));
         String text = getString(R.string.txt_copyright).replace("@year", year).replace("@name", getString(R.string.app_name));
         txt_copy_right.setText(text);
+
+        getInfoDetail();
         
         return root;
     }
+
+    private void getInfoDetail() {
+        Call call = UserController.getInstance().getService().getDetailInfo("bearer " + Common.CONTROLLER.getInfo().getAccessToken());
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                if (response.isSuccessful()) {
+                    Common.CONTROLLER.setInfo((UserInfo) response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+            }
+        });
+    }
+
 }

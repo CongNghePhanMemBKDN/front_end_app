@@ -3,15 +3,20 @@ package com.example.bookingcare.remote.user;
 import com.example.bookingcare.remote.ApiUtils;
 import com.example.bookingcare.remote.Common.CommonInfo;
 import com.example.bookingcare.remote.Common.IController;
+import com.example.bookingcare.remote.doctor.DoctorController;
+import com.example.bookingcare.remote.doctor.Expertise;
+
+import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class UserController implements IController {
     private static UserController _instance;
 
     private UserService userService;
     private UserInfo info;
-    private Object schedule;
 
     private UserController() {
         userService = ApiUtils.getUserService();
@@ -25,7 +30,6 @@ public class UserController implements IController {
     }
 
     public UserService getService() {
-        System.out.println("user service");
         return userService;
     }
 
@@ -40,13 +44,6 @@ public class UserController implements IController {
 
     public void setInfo(CommonInfo info) {
         this.info = (UserInfo) info;
-    }
-
-    public Object getSchedule() {
-        return schedule;
-    }
-
-    public void setSchedule(Object schedule) {
-        this.schedule = schedule;
+        System.out.println("");
     }
 }

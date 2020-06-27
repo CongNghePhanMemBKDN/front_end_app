@@ -21,10 +21,20 @@
             android:iconTint="@android:color/white"
             android:title="@string/menu_account" />
         <item
-            android:id="@+id/nav_departments"
+            android:id="@+id/nav_user_appointment"
+            android:icon="@drawable/ic_appointment"
+            android:iconTint="@android:color/white"
+            android:title="@string/menu_appointment" />
+        <item
+            android:id="@+id/nav_doctor_appointment"
+            android:icon="@drawable/ic_appointment"
+            android:iconTint="@android:color/white"
+            android:title="@string/menu_account" />
+        <item
+            android:id="@+id/nav_expertise"
             android:icon="@drawable/ic_department"
             android:iconTint="@android:color/white"
-            android:title="@string/menu_departments" />
+            android:title="@string/menu_expertise" />
         <item
             android:id="@+id/nav_schedule_manage"
             android:icon="@drawable/ic_schedule"
@@ -37,7 +47,7 @@
             android:title="@string/menu_doctors" />
         <item
             android:id="@+id/nav_contact"
-            android:icon="@drawable/ic_department"
+            android:icon="@drawable/ic_contact"
             android:iconTint="@android:color/white"
             android:title="@string/menu_contact" />
         <item

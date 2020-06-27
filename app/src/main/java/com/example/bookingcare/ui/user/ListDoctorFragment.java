@@ -16,6 +16,7 @@ import com.example.bookingcare.R;
 import com.example.bookingcare.remote.ApiUtils;
 import com.example.bookingcare.remote.doctor.DoctorController;
 import com.example.bookingcare.remote.doctor.DoctorInfo;
+import com.example.bookingcare.remote.doctor.Expertise;
 import com.example.bookingcare.remote.user.UserController;
 
 import org.json.JSONException;
@@ -23,8 +24,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,11 +38,13 @@ public class ListDoctorFragment extends Fragment {
     View root;
     List<DoctorInfo> mListDoctor;
     RecyclerView mDoctorRcv;
+    List<Expertise> mListExpertise;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_list_doctor, container, false);
-
+        getExpertise();
         getListDoctor();
         return root;
     }
@@ -82,6 +87,31 @@ public class ListDoctorFragment extends Fragment {
         mDoctorRcv = root.findViewById(R.id.doctor_rcv);
         mDoctorRcv.setAdapter(adaptor);
         mDoctorRcv.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+    private void getExpertise() {
+        Call call = DoctorController.getInstance().getService().getExpertise();
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                if (response.isSuccessful()){
+                    mListExpertise = new ArrayList<>();
+                    List<Map> body = (List) ((List) response.body()).get(0);
+                    for (int i = 0; i < body.size(); i++) {
+                        Expertise expertise = new Expertise();
+                        expertise.setId((String) body.get(i).get("id"));
+                        expertise.setName((String) body.get(i).get("name"));
+                        mListExpertise.add(expertise);
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+            }
+        });
     }
 
     public void showWaitingCircle(){

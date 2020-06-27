@@ -1,58 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_doctor_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/view_round_white"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="10dp">
+        android:orientation="horizontal"
+        android:padding="15dp">
+
+        <ImageView
+            android:id="@+id/doctor_avatar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/logo" />
+
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp">
-            <ImageView
-                android:id="@+id/doctor_avatar"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:background="@drawable/logo"/>
-            <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/doctor_name"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_marginLeft="5dp">
-                <TextView
-                    android:id="@+id/doctor_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Hồ Quốc Huy"
-                    android:textSize="25sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorPrimary"
-                    android:layout_marginTop="10dp"/>
-                <TextView
-                    android:id="@+id/doctor_department"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Công nghệ thông tin"
-                    android:textSize="18sp"/>
-                <ListView
-                    android:id="@+id/doctor_positions"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Hồ Quốc Huy"
+                android:textColor="@color/colorPrimary"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/doctor_expertise"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Công nghệ thông tin"
+                android:textSize="18sp" />
         </LinearLayout>
+    </LinearLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
         android:text="Clinic address"
         android:textSize="20sp"
-        android:layout_marginLeft="20dp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
+
     <TextView
         android:id="@+id/doctor_clinic_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:layout_marginLeft="20dp"/>
+        android:layout_marginLeft="20dp"
+        android:textSize="18sp" />
 
 </LinearLayout>

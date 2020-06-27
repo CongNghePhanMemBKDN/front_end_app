@@ -18,10 +18,20 @@
         android:label="@string/menu_home"/>
 
     <fragment
-        android:id="@+id/nav_departments"
-        android:name="com.example.bookingcare.ui.user.DepartmentsFragment"
-        android:label="@string/menu_departments"
-        tools:layout="@layout/fragment_departments" />
+        android:id="@+id/nav_user_appointment"
+        android:name="com.example.bookingcare.ui.user.UserAppointmentFragment"
+        android:label="@string/menu_appointment"
+        tools:layout="@layout/fragment_user_appointment" />
+    <fragment
+        android:id="@+id/nav_doctor_appointment"
+        android:name="com.example.bookingcare.ui.doctor.DoctorAppointmentFragment"
+        android:label="@string/menu_appointment"
+        tools:layout="@layout/fragment_doctor_appointment" />
+    <fragment
+        android:id="@+id/nav_expertise"
+        android:name="com.example.bookingcare.ui.user.ExpertiseFragment"
+        android:label="@string/menu_expertise"
+        tools:layout="@layout/fragment_expertise" />
 
     <fragment
         android:id="@+id/nav_doctors"

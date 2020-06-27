@@ -65,7 +65,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
-                android:text="@string/button_ok" />
+                android:text="@string/button_ok"
+                android:background="@color/colorPrimary"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"/>
         </LinearLayout>
 
     </ScrollView>

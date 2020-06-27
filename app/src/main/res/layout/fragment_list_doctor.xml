@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.user.ListDoctorFragment">
+    tools:context=".ui.user.ListDoctorFragment"
+    android:background="@color/color_light_gray">
 
     <RelativeLayout
         android:id="@+id/loadingPanel"
@@ -36,7 +37,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/doctor_rcv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:padding="15dp"/>
         </RelativeLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

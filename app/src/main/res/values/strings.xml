@@ -14,7 +14,8 @@
     <!-- Strings used for menu -->
     <string name="menu_home">Home</string>
     <string name="menu_account">Account</string>
-    <string name="menu_departments">Departments</string>
+    <string name="menu_appointment">Appointments</string>
+    <string name="menu_expertise">Expertise</string>
     <string name="menu_schedule">Schedule</string>
     <string name="menu_schedule_manage">Schedule Manage</string>
     <string name="menu_blog">Blog</string>
@@ -36,5 +37,7 @@
     <string name="txt_copyright">\u00a9 @year @name.</string>
     <!-- Common strings -->
     <string name="button_ok">Ok</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
 
 </resources>

@@ -14,7 +14,7 @@ public class DoctorController implements IController {
     static DoctorController _instance;
     private DoctorService doctorService;
     private DoctorInfo info;
-    Map<String, List<Calendar>> schedule;
+    private Map<String, List<Calendar>> schedule;
 
     private DoctorController() {
         doctorService = ApiUtils.getDoctorService();
@@ -51,4 +51,5 @@ public class DoctorController implements IController {
     public void setSchedule(Map<String, List<Calendar>> schedule) {
         this.schedule = schedule;
     }
+
 }

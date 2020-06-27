@@ -1,11 +1,13 @@
 package com.example.bookingcare.ui.user;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -39,20 +41,14 @@ public class DoctorAdaptor extends RecyclerView.Adapter<DoctorAdaptor.DoctorView
     public void onBindViewHolder(@NonNull DoctorViewHolder holder, final int position) {
         holder.doctorName.setText(mListDoctor.get(position).getFullName());
         holder.doctorClinicAddress.setText(mListDoctor.get(position).getAddressDetail());
+//        holder.doctorExpertise.setText(mListDoctor.get(position).get());
 
-        holder.doctorName.setOnClickListener(new View.OnClickListener() {
+        holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectDoctor(mListDoctor.get(position).getId());
             }
         });
-        holder.avatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectDoctor(mListDoctor.get(position).getId());
-            }
-        });
-
     }
 
     public void selectDoctor(String doctorId) {
@@ -71,17 +67,17 @@ public class DoctorAdaptor extends RecyclerView.Adapter<DoctorAdaptor.DoctorView
     public class DoctorViewHolder extends RecyclerView.ViewHolder {
         ImageView avatar;
         TextView doctorName;
-        TextView doctorDepartment;
-        ListView doctorPositions;
+        TextView doctorExpertise;
         TextView doctorClinicAddress;
+        LinearLayout container;
 
         public DoctorViewHolder(@NonNull View itemView) {
             super(itemView);
             avatar = itemView.findViewById(R.id.doctor_avatar);
             doctorName = itemView.findViewById(R.id.doctor_name);
-            doctorDepartment = itemView.findViewById(R.id.doctor_department);
-            doctorPositions = itemView.findViewById(R.id.doctor_positions);
+            doctorExpertise = itemView.findViewById(R.id.doctor_expertise);
             doctorClinicAddress = itemView.findViewById(R.id.doctor_clinic_address);
+            container = itemView.findViewById(R.id.layout_doctor_item);
         }
     }
 }

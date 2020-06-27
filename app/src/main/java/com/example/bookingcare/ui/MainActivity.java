@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.bookingcare.Common;
 import com.example.bookingcare.R;
 import com.example.bookingcare.remote.doctor.DoctorController;
 import com.example.bookingcare.remote.user.UserController;
+import com.example.bookingcare.ui.user.UpdateDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
@@ -27,12 +29,15 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+import org.json.JSONObject;
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
     NavController navController;
     TextView txtFullName;
-    BottomSheetDialog bottomDialog;
+    UpdateDialog bottomDialog;
+    JSONObject updateBody;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,29 +67,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         int role = getIntent().getIntExtra(Common.ROLE_NAME, Common.ROLE_USER);
 
-        switch (role){
+        switch (role) {
             case Common.ROLE_USER:
                 navGraph.setStartDestination(R.id.nav_home_user);
                 mAppBarConfiguration = new AppBarConfiguration.Builder(
-                        R.id.nav_home_user, R.id.nav_account, R.id.nav_departments, R.id.nav_doctors, R.id.nav_contact, R.id.nav_logout)
+                        R.id.nav_home_user, R.id.nav_account, R.id.nav_user_appointment, R.id.nav_expertise, R.id.nav_doctors, R.id.nav_contact, R.id.nav_logout)
                         .setDrawerLayout(drawerLayout)
                         .build();
                 navigationView.getMenu().findItem(R.id.nav_home_doctor).setVisible(false);
+                navigationView.getMenu().findItem(R.id.nav_doctor_appointment).setVisible(false);
                 navigationView.getMenu().findItem(R.id.nav_schedule_manage).setVisible(false);
 
                 break;
             case Common.ROLE_DOCTOR:
                 navGraph.setStartDestination(R.id.nav_home_doctor);
                 mAppBarConfiguration = new AppBarConfiguration.Builder(
-                        R.id.nav_home_doctor, R.id.nav_account, R.id.nav_schedule_manage, R.id.nav_contact, R.id.nav_logout)
+                        R.id.nav_home_doctor, R.id.nav_doctor_appointment, R.id.nav_schedule_manage, R.id.nav_contact, R.id.nav_logout)
                         .setDrawerLayout(drawerLayout)
                         .build();
                 navigationView.getMenu().findItem(R.id.nav_home_user).setVisible(false);
+                navigationView.getMenu().findItem(R.id.nav_account).setVisible(false);
+                navigationView.getMenu().findItem(R.id.nav_user_appointment).setVisible(false);
                 navigationView.getMenu().findItem(R.id.nav_doctors).setVisible(false);
-                navigationView.getMenu().findItem(R.id.nav_departments).setVisible(false);
+                navigationView.getMenu().findItem(R.id.nav_expertise).setVisible(false);
                 break;
         }
-        if (mAppBarConfiguration == null){
+        if (mAppBarConfiguration == null) {
             throw new IllegalArgumentException();
         }
         navController.setGraph(navGraph);
@@ -110,19 +118,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             }
         });
-        bottomDialog = new BottomSheetDialog(this);
+        bottomDialog = new UpdateDialog(this,
+                new Runnable() {
+            @Override
+            public void run() {
+                bottomDialog.dismiss();
+//                showWaitingCircle();
+            }},
+                new Runnable() {
+            @Override
+            public void run() {
+//                hideWaitingCircle();
+            }});
         bottomDialog.setTitle("Update information");
+        updateBody = new JSONObject();
 
     }
 
-    private void showUpdateDialog(){
-        View sheetView = getLayoutInflater().inflate(R.layout.fragment_account, null);
-        Button btnUpdate = sheetView.findViewById(R.id.update_button);
-        TextInputEditText name = sheetView.findViewById(R.id.edt_name);
-        TextInputEditText password = sheetView.findViewById(R.id.edt_password);
-        bottomDialog.setContentView(sheetView);
+    private void showUpdateDialog() {
+        bottomDialog.dismiss();
         bottomDialog.show();
-
     }
 
     private void doLogout() {
@@ -133,11 +148,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)){
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else{
+        } else {
             super.onBackPressed();
         }
     }
@@ -161,11 +176,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    public void showWaitingCircle(){
+    public void showWaitingCircle() {
         findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
     }
 
-    public void hideWaitingCircle(){
+    public void hideWaitingCircle() {
         findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }
 }

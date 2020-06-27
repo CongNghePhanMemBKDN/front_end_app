@@ -5,7 +5,7 @@ import com.example.bookingcare.remote.doctor.DoctorService;
 import com.example.bookingcare.remote.user.UserService;
 
 public class ApiUtils {
-    public static String BASE_URL = "http://demo2-booking-care.herokuapp.com/";
+    public static String BASE_URL = "https://demo2-booking-care.herokuapp.com/";
 
 
     public static UserService getUserService(){

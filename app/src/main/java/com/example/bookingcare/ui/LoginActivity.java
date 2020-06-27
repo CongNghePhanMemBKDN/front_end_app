@@ -16,14 +16,12 @@ import android.widget.Toast;
 
 import com.example.bookingcare.Common;
 import com.example.bookingcare.R;
+import com.example.bookingcare.RegisterActivity;
 import com.example.bookingcare.remote.ApiUtils;
-import com.example.bookingcare.remote.Common.CommonService;
 import com.example.bookingcare.remote.doctor.DoctorController;
 import com.example.bookingcare.remote.doctor.DoctorInfo;
-import com.example.bookingcare.remote.user.DoctorDetail;
 import com.example.bookingcare.remote.user.UserController;
 import com.example.bookingcare.remote.user.UserInfo;
-import com.example.bookingcare.remote.user.UserService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONException;
@@ -48,8 +46,15 @@ public class LoginActivity extends AppCompatActivity {
         edtEmail = findViewById(R.id.email);
         edtPassword = findViewById(R.id.password);
         loadingProgressBar = findViewById(R.id.loading);
-        FloatingActionButton fab = findViewById(R.id.fab);
 
+        String email = getIntent().getStringExtra(Common.EMAIL);
+        if (email != null && email.trim().length() > 0){
+            edtEmail.setText(email);
+            edtPassword.setText("");
+        }
+
+
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        Button btnLogin = findViewById(R.id.login_button);
+        Button btnLogin = findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-        Button btnRegister = findViewById(R.id.register_button);
+        Button btnRegister = findViewById(R.id.btn_register);
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Button btnSwitchRole = findViewById(R.id.switch_role_button);
+        Button btnSwitchRole = findViewById(R.id.btn_switch_role);
         btnSwitchRole.setText(getString(Common.isUser()?R.string.action_switch_role_doctor:R.string.action_switch_role_user));
         btnSwitchRole.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void doSwitchRole() {
-        Button btnSwitchRole = findViewById(R.id.switch_role_button);
+        Button btnSwitchRole = findViewById(R.id.btn_switch_role);
         String msg;
         if (Common.isUser()){
             Common.ROLE = Common.ROLE_DOCTOR;
@@ -145,10 +150,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void doLogin(final String email, final String password){
+        JSONObject body = new JSONObject();
+
         try {
-            JSONObject body = new JSONObject();
             body.put("email", email);
             body.put("password", password);
+        } catch (Exception e){
+            hideWaitingCircle();
+            Toast.makeText(LoginActivity.this, "Login exception!", Toast.LENGTH_SHORT).show();
+        }
             showWaitingCircle();
             Call call = Common.CONTROLLER.login(body.toString());
             call.enqueue(new Callback() {
@@ -160,7 +170,6 @@ public class LoginActivity extends AppCompatActivity {
                             UserController.getInstance().setInfo((UserInfo) response.body());
                         } else if(Common.isDoctor()) {
                             DoctorController.getInstance().setInfo((DoctorInfo) response.body());
-
                         }
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.putExtra(Common.ROLE_NAME, Common.ROLE);
@@ -185,14 +194,12 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
-        } catch (Exception e){
-            hideWaitingCircle();
-            Toast.makeText(LoginActivity.this, "Login exception!", Toast.LENGTH_SHORT).show();
-        }
+
     }
 
     private void doRegister(){
-
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        startActivity(intent);
     }
 
     public void showWaitingCircle(){

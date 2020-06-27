@@ -24,9 +24,11 @@ import com.example.bookingcare.framework.Event.EventDataType;
 import com.example.bookingcare.framework.Event.EventManager;
 import com.example.bookingcare.framework.Event.EventType;
 import com.example.bookingcare.remote.doctor.DoctorController;
+import com.example.bookingcare.remote.doctor.Expertise;
 import com.example.bookingcare.remote.schedules.Calendar;
 import com.example.bookingcare.remote.user.DoctorDetail;
 import com.example.bookingcare.remote.user.UserController;
+import com.example.bookingcare.remote.user.UserInfo;
 import com.example.bookingcare.ui.LoginActivity;
 import com.example.bookingcare.ui.common.DayWeeks;
 import com.google.gson.Gson;
@@ -55,6 +57,7 @@ public class DoctorDetailActivity extends AppCompatActivity {
     List<DayWeeks> mListDays;
     TextView mScheduleMessage;
     String scheduleId;
+    List<Expertise> mListExpertise;
 
     Map<String, List<Calendar>> schedule;
 
@@ -89,6 +92,8 @@ public class DoctorDetailActivity extends AppCompatActivity {
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
 
+        getExpertise();
+
         name = findViewById(R.id.doctor_detail_name);
         getDetailInfo();
 
@@ -98,6 +103,31 @@ public class DoctorDetailActivity extends AppCompatActivity {
         getSchedule();
 
 
+    }
+
+    private void getExpertise() {
+        Call call = DoctorController.getInstance().getService().getExpertise();
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                if (response.isSuccessful()){
+                    mListExpertise = new ArrayList<>();
+                    List<Map> body = (List) ((List) response.body()).get(0);
+                    for (int i = 0; i < body.size(); i++) {
+                        Expertise expertise = new Expertise();
+                        expertise.setId((String) body.get(i).get("id"));
+                        expertise.setName((String) body.get(i).get("name"));
+                        mListExpertise.add(expertise);
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+            }
+        });
     }
 
     private void bookSchedule() {
@@ -180,6 +210,8 @@ public class DoctorDetailActivity extends AppCompatActivity {
     }
 
     private void initDetail() {
+        setTitle(detail.getFullName());
+
         name.setText(detail.getFullName());
 
         TextView address = findViewById(R.id.doctor_detail_clinic_address);

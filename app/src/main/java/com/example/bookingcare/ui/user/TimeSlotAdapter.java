@@ -57,8 +57,8 @@ public class TimeSlotAdapter extends RecyclerView.Adapter<TimeSlotAdapter.TimeSl
     }
 
     private void selectTimeSlot(String scheduleId) {
-        if (UserController.getInstance().getSchedule() != null){
-            Toast.makeText(context, "You already have a schedule, Please finish it first!", Toast.LENGTH_LONG);
+        if (UserController.getInstance().getInfo().getAppointment() != null){
+            Toast.makeText(context, "You already have a schedule, Please finish it first!", Toast.LENGTH_LONG).show();
         } else{
             HashMap data = new HashMap();
             data.put(EventDataType.SCHEDULE_ID, scheduleId);

@@ -3,11 +3,11 @@ package com.example.bookingcare.ui.common;
 public enum DayWeeks {
     SUNDAY(0),
     MONDAY (1),
-    TUESDAY (1),
-    WEDNESDAY (1),
-    THURSDAY (1),
-    FRIDAY (1),
-    SATURDAY (1);
+    TUESDAY (2),
+    WEDNESDAY (3),
+    THURSDAY (4),
+    FRIDAY (5),
+    SATURDAY (6);
 
     byte id;
 
